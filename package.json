@@ -1,0 +1,32 @@
+{
+    "name": "persistence-is-key",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server.js",
+    "scripts": {
+      "test": "npm run init-db && jest",
+      "test:watch": "jest --watch",
+      "init-db": "node ./Database/init-db.js",
+      "start-dev": "npm run init-db && nodemon server.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/StrickBaaz/LRC"
+    },
+    "author": "Dilynn Strickland & Bradley Hale",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/StrickBaaz/LRC/issues"
+    },
+    "homepage": "https://github.com/StrickBaaz/LRC#instructions",
+    "devDependencies": {
+      "jest": "^27.5.1",
+      "supertest": "^6.2.2"
+    },
+    "dependencies": {
+      "better-sqlite3": "^7.5.0",
+      "dotenv": "^16.0.0",
+      "express": "^4.17.2",
+      "nodemon": "^2.0.15"
+    }
+  }
