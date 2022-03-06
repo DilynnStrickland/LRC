@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS GameTable {
+    userID TEXT PRIMARY KEY,
+    tableID INTEGER NOT NULL
+};
+
+CREATE TABLE IF NOT EXISTS Users {
+    userID TEXT PRIMARY KEY,
+    
+};
