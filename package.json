@@ -7,7 +7,7 @@
         "test": "npm run init-db && jest",
         "test:watch": "jest --watch",
         "init-db": "node ./Database/init-db.js",
-        "start-dev": "npm run init-db && nodemon server.js"
+        "start-dev": "nodemon server.js"
     },
     "repository": {
         "type": "git",
@@ -28,6 +28,7 @@
         "dotenv": "^16.0.0",
         "express": "^4.17.3",
         "nodemon": "^2.0.15",
+        "redis": "^4.0.4",
         "sqlite3": "^4.2.0"
     }
 }
