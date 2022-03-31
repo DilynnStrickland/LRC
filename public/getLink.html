@@ -5,11 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Link to Game</title>
+    <link href="./output.css" rel="stylesheet"></link>
 </head>
 <body>
     <form action="/api/getLink" method="post">
         <div>
-            <label for="link">Link:</label>
+            <label for="link" class="text-red-500">Link:</label>
             <input type="url" name="link" id="link">
         </div>
         <button>Submit</button>
