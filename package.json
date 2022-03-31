@@ -7,7 +7,8 @@
         "test": "npm run init-db && jest",
         "test:watch": "jest --watch",
         "init-db": "node ./Database/init-db.js",
-        "start-dev": "nodemon server.js"
+        "start-dev": "nodemon server.js",
+        "build:css": "tailwind build Views/input.css -o Views/output.css"
     },
     "repository": {
         "type": "git",
