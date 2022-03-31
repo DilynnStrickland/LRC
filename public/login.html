@@ -6,12 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login to Left Right Center!</title>
     <link href="./output.css" rel="stylesheet"></link>
-    <style>
-        .body-bg {
-            background-color: purple;
-            background-image: linear-gradient(315deg, purple 50%, red 74%);
-        }
-    </style>
 </head>
 <body class="body-bg min-h-screen pt-12 md:pt-20 pb-6 px-2 md:px-0" style="font-family:Arial, Helvetica, sans-serif">
     <section>
@@ -20,22 +14,27 @@
         </header>
     </section>
 
-    <form action="/api/login" method="post">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username">
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password">
-        </div>
-        <button>Submit</button>
-    </form>
+    <main class="bg-white max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl">
+        <section>
+            <h3 class="font-bold text-2xl">Welcome to Left Right Center</h3>
+            <p class="text-gray-600 pt-2">Sign in to your account.</p>
+        </section>
+
+        <section class="mt-10">
+            <form class="flex flex-col" action="/api/login" method="post">
+                <div class="mb-6 pt-3 rounded bg-gray-200">
+                    <label class="block text-gray-700 text-sm font-bold mb-2 ml-3" for="username">Username:</label>
+                    <input class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 py-3" type="text" name="username" id="username">
+                </div>
+                <div class="mb-6 pt-3 rounded bg-gray-200">
+                    <label class="block text-gray-700 text-sm font-bold mb-2 ml-3" for="password">Password:</label>
+                    <input class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 py-3" type="password" name="password" id="password">
+                </div>
+                <button class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 rounded shodow-lg hover:shadow-xl transition duration-200" type="submit">Sign In</button>
+            </form>
+        </section>
+    </main>
+    
 </body>
-
-
-
-
-
 
 </html>
