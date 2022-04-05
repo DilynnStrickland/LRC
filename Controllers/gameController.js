@@ -14,7 +14,10 @@ function roll(credits) {
         dice = 1;
     }
     let results = [dice];
-    return results;
+   for(let i = 0; i < dice; i++) {
+    results[i] = crypto.randomInt(6);
+   }
+   return results;
 }
 
 module.exports = {
