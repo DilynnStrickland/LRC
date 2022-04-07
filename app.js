@@ -1,7 +1,25 @@
 "use strict";
 require("dotenv").config();
+const session = require("express-session");
+const redis = require("redis");
+const RedisStore = require("connect-redis")(session);
 const express = require("express");
 const app = express();
+
+const sessionConfig = {
+    store: new RedisStore({ client: redis.createClient()}),
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: false, 
+    name: "session",
+    cookie: {
+        httpOnly: true,
+        maxAage: 1000 * 60 * 8,
+    }
+};
+
+// enable session management
+app.use(session(sessionConfig));
 
 // Allow access to static resources in the public directory
 app.use(express.static("public", {index: "index.html", extensions: ["html"]}));
