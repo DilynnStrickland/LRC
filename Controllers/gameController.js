@@ -20,6 +20,33 @@ function roll(credits) {
    return results;
 }
 
+function play(credits) {
+    const results = roll(credits);
+    for(let  i = 0; i < results.length(); i++) {
+        if(results[i] === 0) {
+            // send left
+        }
+        if(results[i] === 1) {
+            //send right
+        }
+        if(results[i] === 2) {
+            // send center
+        }
+
+    }
+}
+
+function sendLeft() {
+    
+}
+function sendRight() {
+    
+}
+
 module.exports = {
     roll,
+    play,
+    sendLeft,
+    sendRight
+
 }
