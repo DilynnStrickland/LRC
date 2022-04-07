@@ -1,5 +1,5 @@
 "use strict";
-
+const crypto = require("crypto");
 const gameModel = require("../Models/gameModel");
 
 function roll(credits) {
