@@ -1,6 +1,18 @@
 "use strict";
 const crypto = require("crypto");
+const session = require("express-session");
 const gameModel = require("../Models/gameModel");
+
+const table = {
+    players: [],
+    center: 0
+};
+
+const player = {
+    userID: session.user.userID,
+    username: session.user.username,
+    credits: 3
+}
 
 function roll(credits) {
     let dice;
@@ -20,27 +32,52 @@ function roll(credits) {
    return results;
 }
 
-function play(credits) {
+function play(credits, index, players) {
     const results = roll(credits);
     for(let  i = 0; i < results.length(); i++) {
         if(results[i] === 0) {
-            // send left
+            sendLeft(index, players);
         }
         if(results[i] === 1) {
-            //send right
+            sendRight(index, players);
         }
         if(results[i] === 2) {
-            // send center
+            players[index] -= 1;
+            table.center += 1;
         }
 
     }
 }
 
-function sendLeft() {
-    
+function getLeft(index, players){
+    let left;
+    if (index === 0){
+        left = players[players.size - 1];
+    }else{
+        left = players[index - 1];
+    }
+    return left;
 }
-function sendRight() {
-    
+
+function getRight(index, players){
+    let right;
+    if(index === 0){
+        right = players[0];
+    }else{
+        right = players[index + 1];
+    }
+    return right;
+}
+
+function sendLeft(index, players) {
+    const leftPlayer = getLeft(index, players);
+    players[index].credits -= 1;
+    leftPlayer.credits += 1;
+}
+function sendRight(index, players) {
+    const rightPlayer = getRight(index, players);
+    players[index].credits -= 1;
+    rightPlayer.credits += 1;
 }
 
 module.exports = {
