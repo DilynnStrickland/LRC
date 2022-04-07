@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS GameTable {
-    userID TEXT PRIMARY KEY,
-    tableID INTEGER NOT NULL,
+    tableID INTEGER PRIMARY KEY NOT NULL,
+    userID TEXT,
     FOREIGN KEY (userID) REFERENCES Users(userID)
 };
 
