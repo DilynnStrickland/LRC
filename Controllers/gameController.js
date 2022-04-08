@@ -12,7 +12,7 @@ const player = {
     userID: session.user.userID,
     username: session.user.username,
     credits: 3
-}
+};
 
 function roll(credits) {
     let dice;
@@ -29,10 +29,11 @@ function roll(credits) {
    for(let i = 0; i < dice; i++) {
     results[i] = crypto.randomInt(6);
    }
-   return results;
+   return results;  // returns the array of values that were rolled
 }
 
-function play(credits, index, players) {
+
+function play(credits, index, players) { // players is an array
     const results = roll(credits);
     for(let  i = 0; i < results.length(); i++) {
         if(results[i] === 0) {
@@ -49,7 +50,7 @@ function play(credits, index, players) {
     }
 }
 
-function getLeft(index, players){
+function getLeft(index, players){  // players is an array
     let left;
     if (index === 0){
         left = players[players.size - 1];
@@ -59,7 +60,7 @@ function getLeft(index, players){
     return left;
 }
 
-function getRight(index, players){
+function getRight(index, players){  // players is an array
     let right;
     if(index === 0){
         right = players[0];
@@ -69,12 +70,13 @@ function getRight(index, players){
     return right;
 }
 
-function sendLeft(index, players) {
+function sendLeft(index, players) {  // players is an array
     const leftPlayer = getLeft(index, players);
     players[index].credits -= 1;
     leftPlayer.credits += 1;
 }
-function sendRight(index, players) {
+
+function sendRight(index, players) {  // players is an array
     const rightPlayer = getRight(index, players);
     players[index].credits -= 1;
     rightPlayer.credits += 1;
