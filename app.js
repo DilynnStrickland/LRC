@@ -33,12 +33,13 @@ app.use(express.urlencoded({ extended: false }));
 /********************************************************
  * REQUIRE VALIDATORS
  ********************************************************/
-
+ const userValidator = require("./Validators/userValidator");
 
 /********************************************************
  * REQUIRE CONTROLLERS
  ********************************************************/
-
+//  const gameController = require("./Controllers/gameController");
+//  const userController = require("./Controllers/userController");
 
 
 
