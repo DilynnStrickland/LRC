@@ -33,7 +33,7 @@ app.use(express.urlencoded({ extended: false }));
 /********************************************************
  * REQUIRE VALIDATORS
  ********************************************************/
- const userValidator = require("./Validators/userValidator");
+// const userValidator = require("./Validators/userValidator");
 
 /********************************************************
  * REQUIRE CONTROLLERS
