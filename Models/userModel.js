@@ -4,31 +4,31 @@ const crypto = require("crypto");
 const argon2 = require("argon2");
 
 
-async function addUser(username,password) {
-    const uuid = crypto.randomUUID();
-    const sql = `INSERT INTO Users (userID, username, hash)
-    VALUES (@userID, @username, @hash)`;
+async function addUser(username, password){
+    const userID = crypto.randomUUID();
+    const hash = await argon2.hash(password);
+    const sql = `INSERT INTO Users (userid, username, hash)
+                 VALUES (@userID, @username, @hash)`;
     const stmt = db.prepare(sql);
     try {
-        const hash = await argon2.hash(password);
         stmt.run({
-            "userID":uuid,
-            "username":username,
-            "hash":hash,
+            "userID": userID,
+            "username": username,
+            "hash": hash
         });
         return true;
-    } catch(err) {
-        console.error(err);
+    } catch (e) {
         return false;
     }
 }
 
-function getUserByUsername(username) {
-    const sql = `SELECT * FROM Users WHERE username = @username`;
+function getUserByUsername (username){
+    const sql = `SELECT * FROM Users WHERE username=@username`;
     const stmt = db.prepare(sql);
     const record = stmt.get({
-        "username":username
+        "username": username
     });
+
     return record;
 }
 

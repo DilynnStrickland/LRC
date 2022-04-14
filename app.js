@@ -33,19 +33,27 @@ app.use(express.urlencoded({ extended: false }));
 /********************************************************
  * REQUIRE VALIDATORS
  ********************************************************/
-// const userValidator = require("./Validators/userValidator");
+const userValidator = require("./Validators/userValidator");
 
 /********************************************************
  * REQUIRE CONTROLLERS
  ********************************************************/
-//  const gameController = require("./Controllers/gameController");
-//  const userController = require("./Controllers/userController");
+//const gameController = require("./Controllers/gameController");
+const userController = require("./Controllers/userController");
 
 
 
 /********************************************************
  * ENDPOINTS
  ********************************************************/
+ app.post("/api/user", 
+ userValidator.validateRegisterBody, 
+ userController.createNewUser
+);
 
+app.post("/api/login",
+ userValidator.validateRegisterBody,
+ userController.logIn
+);
 
 module.exports = app;
