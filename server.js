@@ -36,4 +36,9 @@ function handleConnection (ws, request) {
     ws.username = req.session.user.username;
 
     clients[ws.username] = ws;
+
+
+    ws.on('close', () => {
+        delete clients[ws.username];
+    });
 }
