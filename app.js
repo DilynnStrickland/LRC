@@ -19,7 +19,8 @@ const sessionConfig = {
 };
 
 // enable session management
-app.use(session(sessionConfig));
+const sessionParser = session(sessionConfig);
+app.use(sessionParser);
 
 // Allow access to static resources in the public directory
 app.use(express.static("public", {index: "index.html", extensions: ["html"]}));
@@ -56,4 +57,7 @@ app.post("/api/login",
  userController.logIn
 );
 
-module.exports = app;
+module.exports = {
+    app,
+    sessionParser
+};
