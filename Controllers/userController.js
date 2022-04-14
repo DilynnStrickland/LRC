@@ -26,12 +26,15 @@ async function login (req,res) {
                 console.error(error);
                 return res.sendStatus(500);
             }
-            req.session.isLoggedIn = true;
-            req.session.user = {"username": username, "userID": userID};
-            res.sendStatus(200);
+
+            req.session.user = {
+                "username": username,
+                "userID": user.userID,
+                "isLoggedIn": true
+            };
+            return res.sendStatus(200);
         });
-    }
-    else {
+    } else {
         res.sendStatus(400);
     }
 }
