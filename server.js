@@ -39,6 +39,7 @@ function handleConnection (ws, request) {
     clients[ws.username] = ws;
     ws.on('message', function(message) {
         message = parseJSON(message);
+        // send message to everyone-------------------------------------------
         if(message.cmd === "message") {
             const tableID = gameModel.getTableID(ws.userID);
             if(!tableID) {
@@ -50,25 +51,44 @@ function handleConnection (ws, request) {
             }
             const players = gameModel.getPlayersFromTable(tableID);
             for(let i = 0; i < players.length; i++) {
-                const playerSocket = clients[players[i].username]; // 
+                const playerSocket = clients[players[i].username]; // the current player socket is whatever socket is at element i of players.username
                 const sentText = {
                     "cmd": "message",
-                    "messageSent": message,
+                    "messageSent": "@message", // still doesn't work, message is an object not a string
                 }
+                
                 if(playerSocket.readyState === ws.OPEN) {
                     playerSocket.send(JSON.stringify(sentText));
                 }
             }
-        } else if(message.cmd === "privateMessage") {
+            // send message to everyone ---------------------------------------
+
+        } else if(message.cmd === "whisper") {
             const tableID = gameModel.getTableID(ws.userID);
             if(!tableID) {
                 const errorData = {
                     "cmd": "error",
                     "errorMessage": "you are not in a game",
                 };
-                return ws.send(Json.stringify(errorData));
+                return ws.send(JSON.stringify(errorData));
             }
+            const players = gameModel.getPlayersFromTable(tableID);
+            const privateMessage = {
+                "cmd": "whisper",
+                "recipient": "@recipient",
+                "messageSent": "@message",
+            };
+            let playerSocket;
+            for(let i = 0; i < players.length; i++) {
+                playerSocket = clients[players[i].username];
+                if(playerSocket === privateMessage.recipient) {
+                    i = players.length;
+                }
+            }
+            playerSocket.send(JSON.stringify(privateMessage));
+            
         }
+        // send message to private: --------------------------------------------
     });
 
     ws.on('close', () => {
