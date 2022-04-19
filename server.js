@@ -3,6 +3,8 @@
 require("dotenv").config();
 const ws = require("ws");
 
+const gameModel = require("./Models/gameModel");
+
 const {app, sessionParser} = require("./app");
 
 const server = app.listen(process.env.PORT, () => {
@@ -30,15 +32,55 @@ function handleUpgrade (req, socket, head){
 const clients = {};
 
 function handleConnection (ws, request) {
-    const userId = request.session.user.userID;
 
-    ws.userID = req.session.user.userID;
-    ws.username = req.session.user.username;
+    ws.userID = request.session.user.userID;
+    ws.username = request.session.user.username;
 
     clients[ws.username] = ws;
-
+    ws.on('message', function(message) {
+        message = parseJSON(message);
+        if(message.cmd === "message") {
+            const tableID = gameModel.getTableID(ws.userID);
+            if(!tableID) {
+                const errorData  = {
+                    "cmd": "error",
+                    "errorMessage": "you are not in a game",
+                };
+                return ws.send(JSON.stringify(errorData));
+            }
+            const players = gameModel.getPlayersFromTable(tableID);
+            for(let i = 0; i < players.length; i++) {
+                const playerSocket = clients[players[i].username]; // 
+                const sentText = {
+                    "cmd": "message",
+                    "messageSent": message,
+                }
+                if(playerSocket.readyState === ws.OPEN) {
+                    playerSocket.send(JSON.stringify(sentText));
+                }
+            }
+        } else if(message.cmd === "privateMessage") {
+            const tableID = gameModel.getTableID(ws.userID);
+            if(!tableID) {
+                const errorData = {
+                    "cmd": "error",
+                    "errorMessage": "you are not in a game",
+                };
+                return ws.send(Json.stringify(errorData));
+            }
+        }
+    });
 
     ws.on('close', () => {
         delete clients[ws.username];
     });
+}
+
+function parseJSON(data) {
+    try {
+        return JSON.parse(data);
+    } catch (error) {
+        console.error(error);
+        return {};
+    }
 }

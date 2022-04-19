@@ -1,15 +1,21 @@
 "use strict";
 const db = require("./db");
 
-function getTableID(tableID) {
-    const sql = `SELECT tableID From gameTable WHERE tableID=@tableID`;
+function getTableID(userID) {
+    const sql = `SELECT tableID From GameTable WHERE userID=@userID`;
     const stmt = db.prepare(sql);
-    const ID = stmt.get({"tableID": tableID});
-    if(!ID) {
-        return;
-    }
+    return stmt.get({"userID": userID});
 }
 
-module.exports = {
-    getTableID
+function getPlayersFromTable(tableID) {
+    const sql = `SELECT username, GameTable.userID as userID FROM GameTable JOIN Users ON GameTable.userID=Users.userID WHERE tableID=@tableID`;
+    const stmt = db.prepare(sql);
+    return stmt.all({"tableID":tableID});
 }
+
+// implement valid table id?
+
+module.exports = {
+    getTableID,
+    getPlayersFromTable
+};

@@ -57,6 +57,8 @@ app.post("/api/login",
  userController.logIn
 );
 
+app.post("/api/chat");
+
 module.exports = {
     app,
     sessionParser
