@@ -14,7 +14,7 @@ async function addUser(username, password){
         stmt.run({
             "userID": userID,
             "username": username,
-            "hash": hash
+            "passwordHash": hash
         });
         return true;
     } catch (e) {
