@@ -7,7 +7,7 @@ const argon2 = require("argon2");
 async function addUser(username, password){
     const userID = crypto.randomUUID();
     const hash = await argon2.hash(password);
-    const sql = `INSERT INTO Users (userid, username, hash)
+    const sql = `INSERT INTO Users (userID, username, hash)
                  VALUES (@userID, @username, @hash)`;
     const stmt = db.prepare(sql);
     try {
@@ -32,7 +32,25 @@ function getUserByUsername (username){
     return record;
 }
 
+function getUserByUserID (userID) {
+    const sql = `SELECT * FROM Users WHERE userID=@userID`;
+    const stmt = db.prepare(sql);
+    const user = stmt.get({
+        "userID": userID
+    });
+
+    return user;
+}
+
+function setUsername (username, userID) {
+    const sql = `UPDATE Users SET username=@username WHERE userID=@userID`;
+    const stmt = db.prepare(sql);
+    stmt.run({"username": username, "userID": userID});
+}
+
 module.exports = {
     addUser,
-    getUserByUsername
+    getUserByUsername,
+    getUserByUserID,
+    setUsername
 }

@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS Users {
 };
 
 CREATE TABLE IF NOT EXISTS GameTable {
-    tableID INTEGER PRIMARY KEY NOT NULL,
+    tableID TEXT PRIMARY KEY NOT NULL,
     userID TEXT,
     FOREIGN KEY (userID) REFERENCES Users(userID) -- fix this for non-account play
 };

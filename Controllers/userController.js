@@ -1,5 +1,6 @@
 "use strict";
 const argon2 = require("argon2");
+const { func } = require("joi");
 const userModel = require("../Models/userModel");
 
 async function createNewUser (req,res) {
@@ -29,7 +30,7 @@ async function logIn (req, res) {
 
             req.session.user = {};
             req.session.user.username = username;
-            req.session.user.userID = user.userid;
+            req.session.user.userID = user.userID;
             req.session.user.isLoggedIn = true;
 
             return res.sendStatus(200);
@@ -39,10 +40,17 @@ async function logIn (req, res) {
     }
 }
 
+function updateUsername (req, res){
+    userModel.setUsername(req.body.username, req.session.userID);
+}
+
+
+
 
 
 
 module.exports = {
     createNewUser,
-    logIn
+    logIn,
+    updateUsername
 }

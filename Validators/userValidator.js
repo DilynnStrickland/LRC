@@ -21,6 +21,13 @@ const registerSchema = joi.object({
         .required()
 });
 
+const usernameSchema = joi.object({
+    username: joi.string()
+        .min(3)
+        .token()
+        .required()
+});
+
 function validateRegisterBody (req, res, next) {
     const {value, error} = registerSchema.validate(req.body, validateOpts);
 
@@ -34,6 +41,20 @@ function validateRegisterBody (req, res, next) {
     next();
 }
 
+function validateUsernameBody (req, res, next) {
+    const {value, error} = usernameSchema.validate(req.body, validateOpts);
+
+    if (error) {
+        const errorMessages = error.details.map( detail => detail.message);
+        return res.status(400).json({"errors": errorMessages});
+    }
+
+    req.body = value;
+
+    next();
+}
+
 module.exports = {
-    validateRegisterBody
+    validateRegisterBody,
+    validateUsernameBody
 }

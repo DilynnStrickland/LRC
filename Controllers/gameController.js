@@ -14,6 +14,10 @@ const player = {
     credits: 3
 };
 
+function createNewTable(){
+
+}
+
 function roll(credits) {
     let dice;
     if(credits >= 3) {
@@ -83,6 +87,7 @@ function sendRight(index, players) {  // players is an array
 }
 
 module.exports = {
+    createNewTable,
     roll,
     play,
     sendLeft,
