@@ -14,7 +14,7 @@ function createTable() {
         stmt.run({
             "tableID": tableID
         });
-        return true;
+        return tableID;
     } catch (e) {
         return false;
     }

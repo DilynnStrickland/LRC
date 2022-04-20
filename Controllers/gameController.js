@@ -9,13 +9,14 @@ const table = {
 };
 
 const player = {
-    userID: session.user.userID,
-    username: session.user.username,
-    credits: 3
+
 };
 
-function createNewTable(){
+function createNewTable(req, res){
+    //const tableID = gameModel.createTable();
+    //const players = gameModel.getPlayersFromTable(tableID);
 
+    res.render("table");
 }
 
 function roll(credits) {
