@@ -5,7 +5,7 @@ const validateOpts = {
     abortEarly: false,
 	stripUnknown: true, 
 	errors: {
-		escapeHtml: true,
+		escapeHtml: true
 	}
 };
 
@@ -13,18 +13,10 @@ const registerSchema = joi.object({
     username: joi.string()
         .min(3)
         .token()
-        .lowercase()
         .required(),
 
     password: joi.string()
         .min(6)
-        .required()
-});
-
-const usernameSchema = joi.object({
-    username: joi.string()
-        .min(3)
-        .token()
         .required()
 });
 

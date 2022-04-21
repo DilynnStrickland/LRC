@@ -7,17 +7,18 @@ const argon2 = require("argon2");
 async function addUser(username, password){
     const userID = crypto.randomUUID();
     const hash = await argon2.hash(password);
-    const sql = `INSERT INTO Users (userID, username, hash)
-                 VALUES (@userID, @username, @hash)`;
+    const sql = `INSERT INTO Users (userID, username, passwordHash) 
+    VALUES(@userID, @username, @hash)`;
     const stmt = db.prepare(sql);
     try {
         stmt.run({
-            "userID": userID,
-            "username": username,
-            "passwordHash": hash
+            "userID":userID,
+            "username":username,
+            "hash":hash,
         });
         return true;
-    } catch (e) {
+    } catch (err) {
+        console.error(err);
         return false;
     }
 }

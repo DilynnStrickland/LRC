@@ -1,16 +1,14 @@
 "use strict";
 const argon2 = require("argon2");
-const { func } = require("joi");
 const userModel = require("../Models/userModel");
 
 async function createNewUser (req,res) {
     const {username, password} = req.body;
-    const user = await userModel.addUser(username, password);
-    if (!user){
+    const createdUser = await userModel.addUser(username, password);
+    if(!createdUser) {
         return res.sendStatus(409);
-    }else{
-        return res.sendStatus(201);
     }
+    res.sendStatus(201);
 }
 
 async function logIn (req, res) {
@@ -19,10 +17,9 @@ async function logIn (req, res) {
     if (!user){
         return res.sendStatus(400);
     }
-    const {hash} = user;
-    const verify = await argon2.verify(hash, password);
-    if (verify){
-        req.session.regenerate((err) =>{
+    const {passwordHash} = user;
+    if (await argon2.verify(passwordHash, password)) {
+        req.session.regenerate( (err) =>{
             if (err){
                 console.error(err);
                 return res.sendStatus(500);
@@ -35,7 +32,7 @@ async function logIn (req, res) {
 
             return res.sendStatus(200);
         });
-    } else{
+    } else {
         return res.sendStatus(400);
     }
 }
