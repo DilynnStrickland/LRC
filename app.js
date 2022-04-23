@@ -41,7 +41,6 @@ const userValidator = require("./Validators/userValidator");
  ********************************************************/
 const gameController = require("./Controllers/gameController");
 const userController = require("./Controllers/userController");
-const { application } = require("express");
 
 app.set("view engine", "ejs");
 
@@ -59,6 +58,7 @@ app.post("/api/login",
 );
 
 app.post("/api/chat");
+
 
 app.get("/table", gameController.createNewTable);
 

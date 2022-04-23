@@ -11,6 +11,7 @@ const server = app.listen(process.env.PORT, () => {
     console.log(`Listening on port: ${process.env.PORT}`);
 });
 
+// live chat stuff is here
 const wss = new ws.WebSocketServer({ noServer: true });
 
 server.on("upgrade", handleUpgrade);
@@ -40,7 +41,7 @@ function handleConnection (ws, request) {
     ws.on('message', function(message) {
         message = parseJSON(message);
         // send message to everyone-------------------------------------------
-        if(message.cmd === "message") {
+        if(message.cmd === "post") {
             const tableID = gameModel.getTableID(ws.userID);
             if(!tableID) {
                 const errorData  = {
@@ -53,7 +54,7 @@ function handleConnection (ws, request) {
             for(let i = 0; i < players.length; i++) {
                 const playerSocket = clients[players[i].username]; // the current player socket is whatever socket is at element i of players.username
                 const sentText = {
-                    "cmd": "message",
+                    "cmd": "post",
                     "messageSent": "@message", // still doesn't work, message is an object not a string
                 }
                 
@@ -103,4 +104,9 @@ function parseJSON(data) {
         console.error(error);
         return {};
     }
+}
+
+module.exports = {
+    handleUpgrade,
+    handleConnection
 }
