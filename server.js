@@ -38,6 +38,7 @@ function handleConnection (ws, request) {
     ws.username = request.session.user.username;
 
     clients[ws.username] = ws;
+
     ws.on('message', function(message) {
         message = parseJSON(message);
         // send message to everyone-------------------------------------------
@@ -88,6 +89,15 @@ function handleConnection (ws, request) {
             }
             playerSocket.send(JSON.stringify(privateMessage));
             
+        } else if (message.cmd === "init-game"){
+            // get game state
+
+            // send back the game state
+            ws.send();
+        }else if (message.cmd === "update"){
+
+
+            ws.send();
         }
         // send message to private: --------------------------------------------
     });
