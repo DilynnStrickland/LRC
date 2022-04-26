@@ -49,13 +49,19 @@ app.set("view engine", "ejs");
  ********************************************************/
  app.post("/api/user", 
  userValidator.validateRegisterBody, 
- userController.createNewUser
-);
+ userController.createNewUser,
+ (req, res) => {
+     res.redirect("/api/login");
+});
 
 app.post("/api/login",
  userValidator.validateRegisterBody,
- userController.logIn
-);
+ userController.logIn,
+ (req, res) => {
+    res.redirect("/api/index");
+});
+
+
 
 app.post("/api/chat");
 

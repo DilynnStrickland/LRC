@@ -3,8 +3,8 @@
 
 const socket = new WebSocket();  // host name goes in the parenthesis
 
-const playBtn = playBtn.getByElementId("playBtn");
-const messageBtn = messageBtn.getByElementID("messateBtn");
+const playBtn = document.getByElementId("playBtn");
+const messageBtn = document.getByElementID("messageBtn");
 const messages = document.querySelector('#messages');
 const messageBox = document.querySelector('#messageBox');
 
