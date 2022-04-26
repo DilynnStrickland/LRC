@@ -19,7 +19,8 @@ wss.on("connection", handleConnection);
 
 function handleUpgrade (req, socket, head){
     sessionParser(req, {}, () => {
-        if (!req.session.isLoggedIn){
+        if ( !req.session?.user?.isLoggedIn){
+            console.log("looks like someone isn't logged in");
             socket.destroy();
             return;
         }
@@ -41,25 +42,28 @@ function handleConnection (ws, request) {
 
     ws.on('message', function(message) {
         message = parseJSON(message);
+        console.log(message);
         // send message to everyone-------------------------------------------
         if(message.cmd === "post") {
             const tableID = gameModel.getTableID(ws.userID);
-            if(!tableID) {
-                const errorData  = {
-                    "cmd": "error",
-                    "errorMessage": "you are not in a game",
-                };
-                return ws.send(JSON.stringify(errorData));
-            }
-            const players = gameModel.getPlayersFromTable(tableID);
+            // if(!tableID) {
+            //     const errorData  = {
+            //         "cmd": "error",
+            //         "errorMessage": "you are not in a game",
+            //     };
+            //     return ws.send(JSON.stringify(errorData));
+            // }
+            // const players = gameModel.getPlayersFromTable(tableID);
+            const players = [{"username":"JuanTawn"}, {"username":"BurritoBrad"}, {"username":"test1"}];
             for(let i = 0; i < players.length; i++) {
                 const playerSocket = clients[players[i].username]; // the current player socket is whatever socket is at element i of players.username
                 const sentText = {
                     "cmd": "post",
-                    "messageSent": "@message", // still doesn't work, message is an object not a string
+                    "messageSent": message.messageSent, // still doesn't work, message is an object not a string
+                    "username": ws.username
                 }
                 
-                if(playerSocket.readyState === ws.OPEN) {
+                if(playerSocket?.readyState === ws.OPEN) {
                     playerSocket.send(JSON.stringify(sentText));
                 }
             }
@@ -93,11 +97,11 @@ function handleConnection (ws, request) {
             // get game state
 
             // send back the game state
-            ws.send();
+            // ws.send();
         }else if (message.cmd === "update"){
 
 
-            ws.send();
+            // ws.send();
         }
         // send message to private: --------------------------------------------
     });

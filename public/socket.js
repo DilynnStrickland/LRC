@@ -1,17 +1,22 @@
 "use strict";
 
 
-const socket = new WebSocket();  // host name goes in the parenthesis
+const socket = new WebSocket("ws://localhost:8080");  // host name goes in the parenthesis
+
 
 const playBtn = document.getByElementId("playBtn");
-const messageBtn = document.getByElementID("messageBtn");
-const messages = document.querySelector('#messages');
-const messageBox = document.querySelector('#messageBox');
 
-playBtn.addEventListener("click", (event) =>{
-    playBtn.disabled = true;
-    socket.send();
-});
+
+
+
+// const playBtn = document.getElementbyId("playBtn");
+const messageForm = document.getElementById("chatForm");
+
+
+// playBtn.addEventListener("click", (event) =>{
+//     playBtn.disabled = true;
+//     socket.send();
+// });
 
 socket.addEventListener("open", (event) => {
     socket.send(JSON.stringify({
@@ -19,44 +24,34 @@ socket.addEventListener("open", (event) => {
     }));
 });
 
-
-messageBtn.addEventListener("click", (event) =>{
+messageForm.addEventListener("submit", (event) =>{
     event.preventDefault();
-    if(!ws) {
-        showMessage("no websocket connection ");
-        return;
-    }
-    
+    const messageInput = document.getElementById("messageInput");
+    const message = messageInput.value;
+    console.log(message);
+    const data = {
+        "cmd": "post",
+        "messageSent": message
+    };
+    socket.send(JSON.stringify(data));
+
 });
 
 socket.addEventListener("message", (event) =>{
-    event.preventDefault();
-    const message = parseJSON(message);
+    console.log(event.data);
+    const message = parseJSON(event.data);
 
     if(message.cmd === "error"){
         
-    }else if(message.cmd === "message"){
-
-       ws.send(message.messageSent);
-       showMessage(message.messageSent);
-
+    }else if(message.cmd === "post"){
+        addPost(message.messageSent);
     }else if(message.cmd === "whisper"){
-
-        ws.send(message.messageSent);
-        showMessage(message.messageSent);
 
     }else if(message.cmd === "update"){
         
     }
 
 });
-
-function showMessage(message) {
-    messages.textContent += `\n\n${message}`;
-    messages.scrollTop = messages.scrollHeight;
-    messageBox.value = '';
-}
-
 function parseJSON(data) {
     try {
         return JSON.parse(data);
@@ -64,4 +59,12 @@ function parseJSON(data) {
         console.error(error);
         return {};
     }
+}
+
+function addPost(data) {
+    const newMessage = document.createElement("div");
+    newMessage.textContent = data;
+
+    const chatBox = document.getElementById("chatbox");
+    chatBox.append(newMessage);
 }
