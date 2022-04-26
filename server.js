@@ -41,6 +41,7 @@ function handleConnection (ws, request) {
 
     ws.on('message', function(message) {
         message = parseJSON(message);
+        console.log(message);
         // send message to everyone-------------------------------------------
         if(message.cmd === "post") {
             const tableID = gameModel.getTableID(ws.userID);
