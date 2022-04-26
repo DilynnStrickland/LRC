@@ -3,12 +3,13 @@
 
 const socket = new WebSocket("ws://localhost:8080");  // host name goes in the parenthesis
 
-const playBtn = playBtn.getByElementId("playBtn");
+// const playBtn = playBtn.getByElementId("playBtn");
+// const messageBtn = messageBtn.getByElementId("messageBtn");
 
-playBtn.addEventListener("click", (event) =>{
-    playBtn.disabled = true;
-    socket.send();
-});
+// playBtn.addEventListener("click", (event) =>{
+//     playBtn.disabled = true;
+//     socket.send();
+// });
 
 socket.addEventListener("open", (event) => {
     socket.send(JSON.stringify({
@@ -18,7 +19,6 @@ socket.addEventListener("open", (event) => {
 
 
 // messageBtn.addEventListener("click", (event) =>{
-//     event.preventDefault();
 //     if(!ws) {
 //         showMessage("no websocket connection ");
 //         return;
@@ -27,8 +27,8 @@ socket.addEventListener("open", (event) => {
 // });
 
 socket.addEventListener("message", (event) =>{
-    event.preventDefault();
-    const message = parseJSON(message);
+    console.log(event.data);
+    const message = parseJSON(event.data);
 
     if(message.cmd === "error"){
         

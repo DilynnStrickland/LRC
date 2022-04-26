@@ -19,7 +19,8 @@ wss.on("connection", handleConnection);
 
 function handleUpgrade (req, socket, head){
     sessionParser(req, {}, () => {
-        if (!req.session.isLoggedIn){
+        if ( !req.session?.user?.isLoggedIn){
+            console.log("looks like someone isn't logged in");
             socket.destroy();
             return;
         }
@@ -94,11 +95,11 @@ function handleConnection (ws, request) {
             // get game state
 
             // send back the game state
-            ws.send();
+            // ws.send();
         }else if (message.cmd === "update"){
 
 
-            ws.send();
+            // ws.send();
         }
         // send message to private: --------------------------------------------
     });
