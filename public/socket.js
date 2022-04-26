@@ -1,7 +1,7 @@
 "use strict";
 
 
-const socket = new WebSocket("ws://127.0.0.1:8080");  // host name goes in the parenthesis
+const socket = new WebSocket("ws://localhost:8080");  // host name goes in the parenthesis
 
 const playBtn = playBtn.getByElementId("playBtn");
 
