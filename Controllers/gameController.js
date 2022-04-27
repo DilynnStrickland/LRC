@@ -8,30 +8,30 @@ const TABLES = {};
 
 class Table {
     constructor(player, tableID){
-        self.tableID = tableID;
-        self.players = [];
-        self.players.push(player);
-        self.center = 0;
-        self.currentPlayer = 0;
+        this.tableID = tableID;
+        this.players = [];
+        this.players.push(player);
+        this.center = 0;
+        this.currentPlayer = 0;
     }
     getCurrentPlayer(){
-        return self.players[self.currentPlayer];
+        return this.players[this.currentPlayer];
     }
     addPlayer(player){
-        self.players.push(player);
+        this.players.push(player);
     }
     nextTurn(){
-        self.currentPlayer = (self.currentPlayer + 1) % self.players.length;
-        return self.players[self.currentPlayer];
+        this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
+        return this.players[this.currentPlayer];
     }
 };
 
 class Player {
     constructor(username, userID, tableID){
-        self.username = username;
-        self.userID = userID;
-        self.money = 3;
-        self.tableID = tableID;
+        this.username = username;
+        this.userID = userID;
+        this.money = 3;
+        this.tableID = tableID;
     }
 };
 
@@ -43,12 +43,13 @@ function createNewTable(req, res){
 
     TABLES[tableID] = table;
 
-    res.render("table", {"player": player});
+    res.render("table", {"player": player, "center": table.center});
 }
 
 function addPlayer(req, res){
     const tableID = req.params.tableID;
-    
+    const player = new Player(req.session.user.username, req.session.user.userID, tableID);
+    TABLES[tableID].addPlayer(player);
 }
 
 function roll(credits) {
@@ -125,5 +126,6 @@ module.exports = {
     play,
     sendLeft,
     sendRight,
-    TABLES
+    TABLES,
+    addPlayer
 }
