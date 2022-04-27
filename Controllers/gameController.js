@@ -1,22 +1,54 @@
 "use strict";
+const { table } = require("console");
 const crypto = require("crypto");
 const session = require("express-session");
 const gameModel = require("../Models/gameModel");
 
-const table = {
-    players: [],
-    center: 0
+const TABLES = {};
+
+class Table {
+    constructor(player, tableID){
+        self.tableID = tableID;
+        self.players = [];
+        self.players.push(player);
+        self.center = 0;
+        self.currentPlayer = 0;
+    }
+    getCurrentPlayer(){
+        return self.players[self.currentPlayer];
+    }
+    addPlayer(player){
+        self.players.push(player);
+    }
+    nextTurn(){
+        self.currentPlayer = (self.currentPlayer + 1) % self.players.length;
+        return self.players[self.currentPlayer];
+    }
 };
 
-const player = {
-
+class Player {
+    constructor(username, userID, tableID){
+        self.username = username;
+        self.userID = userID;
+        self.money = 3;
+        self.tableID = tableID;
+    }
 };
 
 function createNewTable(req, res){
-    //const tableID = gameModel.createTable();
-    //const players = gameModel.getPlayersFromTable(tableID);
+    const tableID = gameModel.createTable(req.session.user.userID);
+    req.session.user.tableID = tableID;
+    const player = new Player(req.session.user.username, req.session.user.userID, tableID);
+    const table = new Table(player, tableID);
 
-    res.render("table");
+    TABLES[tableID] = table;
+
+    res.render("table", {"player": player});
+}
+
+function addPlayer(req, res){
+    const tableID = req.params.tableID;
+    
 }
 
 function roll(credits) {
@@ -92,6 +124,6 @@ module.exports = {
     roll,
     play,
     sendLeft,
-    sendRight
-
+    sendRight,
+    TABLES
 }

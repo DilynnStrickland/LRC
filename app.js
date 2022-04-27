@@ -50,16 +50,16 @@ app.set("view engine", "ejs");
  app.post("/api/user", 
  userValidator.validateRegisterBody, 
  userController.createNewUser,
- (req, res) => {
-     res.redirect("/api/login");
-});
+);
 
 app.post("/api/login",
  userValidator.validateRegisterBody,
- userController.logIn,
- (req, res) => {
-    res.redirect("/api/index");
-});
+ userController.logIn
+ );
+
+ app.get("/", (req, res) => {
+    res.render("index", {"loggedIn": req.session?.user?.isLoggedIn});
+ });
 
 
 

@@ -20,7 +20,7 @@ const messageForm = document.getElementById("chatForm");
 
 socket.addEventListener("open", (event) => {
     socket.send(JSON.stringify({
-        "cmd": "init-game"
+        "cmd": "join-game"
     }));
 });
 

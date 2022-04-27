@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS Users (
 );
 
 CREATE TABLE IF NOT EXISTS GameTable (
-    tableID TEXT PRIMARY KEY NOT NULL,
-    userID TEXT,
+    tableID TEXT NOT NULL,
+    userID TEXT NOT NULL,
     FOREIGN KEY (userID) REFERENCES Users(userID) 
+);

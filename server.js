@@ -37,6 +37,7 @@ function handleConnection (ws, request) {
 
     ws.userID = request.session.user.userID;
     ws.username = request.session.user.username;
+    ws.tableID = request.session.user.tableID;
 
     clients[ws.username] = ws;
 
@@ -93,7 +94,7 @@ function handleConnection (ws, request) {
             }
             playerSocket.send(JSON.stringify(privateMessage));
             
-        } else if (message.cmd === "init-game"){
+        } else if (message.cmd === "join-game"){
             // get game state
 
             // send back the game state

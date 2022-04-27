@@ -5,14 +5,15 @@ const argon2 = require("argon2");
 
 const userModel = require("./userModel");
 
-function createTable() {
+function createTable(userID) {
     const tableID = crypto.randomUUID();
-    const sql = `INSERT INTO GameTable (tableID)
-                 VALUES (@tableID)`;
+    const sql = `INSERT INTO GameTable (tableID, userID)
+                 VALUES (@tableID, @userID)`;
     const stmt = db.prepare(sql);
     try {
         stmt.run({
-            "tableID": tableID
+            "tableID": tableID,
+            "userID": userID
         });
         return tableID;
     } catch (e) {
@@ -21,13 +22,18 @@ function createTable() {
 }
 
 function addToTable(userID, tableID) {
-    const sql = `UPDATE GameTable SET userID=@userID WHERE tableID=@tableID`;
+    const sql = `INSERT INTO GameTable (tableID, userID)
+                 VALUES (@tableID, @userID)`;
     const stmt = db.prepare(sql);
-    stmt.run({
-        "userID": userID,
-        "tableID": tableID
-    });
-
+    try {
+        stmt.run({
+            "tableID": tableID,
+            "userID": userID
+        });
+        return tableID;
+    } catch (e) {
+        return false;
+    }
 }
 
 function getTableID(userID) {

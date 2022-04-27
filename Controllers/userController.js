@@ -8,7 +8,7 @@ async function createNewUser (req,res) {
     if(!createdUser) {
         return res.sendStatus(409);
     }
-    res.sendStatus(201);
+    res.redirect("/login");
 }
 
 async function logIn (req, res) {
@@ -30,7 +30,7 @@ async function logIn (req, res) {
             req.session.user.userID = user.userID;
             req.session.user.isLoggedIn = true;
 
-            return res.sendStatus(200);
+            return res.redirect("/");
         });
     } else {
         return res.sendStatus(400);
