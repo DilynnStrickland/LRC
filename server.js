@@ -95,13 +95,24 @@ function handleConnection (ws, request) {
             
         } else if (message.cmd === "join-game"){
             // get game state
+            const tableID = ws.tableID;
+            let table = TABLES[tableID];
+            const data = {
+                "cmd" : "update",
+                "table": table
+            };
 
-            // send back the game state
-            // ws.send();
+            ws.send(JSON.stringify(data));
         }else if (message.cmd === "update"){
+            const player = ws.userID;
+            const tableID = ws.tableID;
+            let table = TABLES[tableID];
+            const data = {
+                "cmd" : "update",
+                "table": table
+            };
 
-
-            // ws.send();
+            
         }
     });
 
