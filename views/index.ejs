@@ -12,7 +12,11 @@
         <% if (!loggedIn) { %>
             <a href="/login" class="py-2 px-2 font-medium text-white rounded bg-red-500 hover:bg-red-400 transition duration-300">Log In</a>
             <a href="/register" class="py-2 px-2 font-medium text-white bg-red-500 rounded hover:bg-red-400 transition duration-300">Sign Up</a>
-        <% } %>
+        <% } else { %>
+            <form action="/logout" method="post">
+                <button class="py-2 px-2 font-medium text-white rounded bg-purple-500 hover:bg-purple-400 transition duration-300">Logout</button>
+            </form>
+        <% } %> 
     </div>
 
 
@@ -21,8 +25,10 @@
         <% if (!loggedIn) { %>
             <a href="/username" class="py-2 px-2 font-medium text-white rounded bg-purple-500 hover:bg-purple-400 transition duration-300">New Game</a>
         <% } else { %>
-            <a href="/table" class="py-2 px-2 font-medium text-white rounded bg-purple-500 hover:bg-purple-400 transition duration-300">New Game</a>
-        <% } %>
+            <form action="/table" method="post">
+                <button id="createGame" class="py-2 px-2 font-medium text-white rounded bg-purple-500 hover:bg-purple-400 transition duration-300">New Game</button>
+            </form>
+            <% } %>
         <a href="/getLink" class="py-2 px-2 font-medium text-white rounded bg-purple-500 hover:bg-purple-400 transition duration-300">Join Game</a>
         <a href="/chat" class="py-2 px-2 font-medium text-white rounded bg-purple-500 hover:bg-purple-400 transition duration-300">chat</a>
     </div>

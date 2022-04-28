@@ -10,3 +10,7 @@ CREATE TABLE IF NOT EXISTS GameTable (
     userID TEXT NOT NULL,
     FOREIGN KEY (userID) REFERENCES Users(userID) 
 );
+
+CREATE TABLE IF NOT EXISTS GameState (
+    state TEXT
+);

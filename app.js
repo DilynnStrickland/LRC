@@ -61,13 +61,19 @@ app.post("/api/login",
     res.render("index", {"loggedIn": req.session?.user?.isLoggedIn});
  });
 
-
-
-app.post("/api/chat");
-
-
-app.get("/table/:tableID", gameController.createNewTable);
+app.post("/table", gameController.createNewTable);
 app.post("/table/:tableID", gameController.addPlayer);
+app.get("/table/:tableID", gameController.getTable);
+
+app.post("/logout", (req, res) => {
+    req.session.regenerate( (err) =>{
+        if (err){
+            console.error(err);
+        }
+        res.redirect("/");
+    });
+});
+
 
 module.exports = {
     app,

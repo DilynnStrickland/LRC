@@ -1,9 +1,6 @@
 "use strict";
 const db = require("./db");
 const crypto = require("crypto");
-const argon2 = require("argon2");
-
-const userModel = require("./userModel");
 
 function createTable(userID) {
     const tableID = crypto.randomUUID();
@@ -48,11 +45,35 @@ function getPlayersFromTable(tableID) {
     return stmt.all({"tableID":tableID});
 }
 
+function saveGame(state){
+    const sql = `INSERT INTO GameState (state) VALUES (@state)`;
+    const stmt = db.prepare(sql);
+    stmt.run({
+        "state": state,
+    });
+}
+
+function loadGame(){
+    let sql = `SELECT * FROM GameState`;
+    let stmt = db.prepare(sql);
+    let game = stmt.get();
+    if(!game){
+        return;
+    }
+    sql = `DELETE FROM GameState`;
+    stmt = db.prepare(sql);
+    stmt.run();
+    game = JSON.parse(game.state);
+    return game;
+}
+
 // implement valid table id?
 
 module.exports = {
     createTable,
     addToTable,
     getTableID,
-    getPlayersFromTable
+    getPlayersFromTable,
+    saveGame,
+    loadGame
 };

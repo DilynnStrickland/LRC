@@ -1,5 +1,4 @@
 "use strict";
-const { table } = require("console");
 const crypto = require("crypto");
 const session = require("express-session");
 const gameModel = require("../Models/gameModel");
@@ -14,6 +13,16 @@ class Table {
         this.center = 0;
         this.currentPlayer = 0;
     }
+    static fromObject(tableState){
+        const table = new Table();
+        table.tableID = tableState.tableID;
+        table.players = tableState.players.map(player => Player.fromObject(player));
+        table.center = tableState.center;
+        table.currentPlayer = tableState.currentPlayer;
+
+        return table;
+    }
+
     getCurrentPlayer(){
         return this.players[this.currentPlayer];
     }
@@ -24,6 +33,17 @@ class Table {
         this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
         return this.players[this.currentPlayer];
     }
+    toJSON(){
+        const table = {
+            "tableID" : this.tableID,
+            "players" : this.players,
+            "center" : this.center,
+            "currentPlayer" : this.currentPlayer,
+            "numPlayers" : this.numPlayers
+        };
+        
+        return table;
+    }
 };
 
 class Player {
@@ -33,23 +53,72 @@ class Player {
         this.money = 3;
         this.tableID = tableID;
     }
+
+    static fromObject(playerState){
+        const player = new Player();
+        player.username = playerState.username;
+        player.userID = playerState.userID;
+        player.money = playerState.money;
+        player.tableID = playerState.tableID;
+
+        return player;
+    }
+
+    toJSON(){
+        const player = {
+            "username" : this.username,
+            "userID" : this.userID,
+            "money" : this.money,
+            "tableID" : this.tableID,
+        };
+
+        return player;
+    }
 };
 
 function createNewTable(req, res){
     const tableID = gameModel.createTable(req.session.user.userID);
     req.session.user.tableID = tableID;
+    req.session.user.playerNumber = 0;
     const player = new Player(req.session.user.username, req.session.user.userID, tableID);
     const table = new Table(player, tableID);
 
     TABLES[tableID] = table;
 
-    res.render("table", {"player": player, "center": table.center});
+    res.redirect(`/table/${tableID}`);
+}
+
+function getTable(req, res){
+    if (!req.session?.user?.tableID){
+        return res.redirect("/");
+    } else if(req.session.user.tableID !== req.params.tableID){
+        return res.redirect(`/table/${req.session.user.tableID}`);
+    }
+    const table = TABLES[req.session.user.tableID];
+    const player = table.players[req.session.user.playerNumber];
+
+
+    res.render("table", {"player": player, "center": "table.center"});
 }
 
 function addPlayer(req, res){
+    if (!req.session?.user?.userID){
+        return res.redirect("/");
+    }
     const tableID = req.params.tableID;
+    if (req.session.user.tableID){
+        return res.redirect(`/table/${req.session.user.tableID}`);
+    }
+    req.session.user.tableID = tableID;
+    console.log(tableID);
+    const table = TABLES[tableID];
+    console.log(table);
     const player = new Player(req.session.user.username, req.session.user.userID, tableID);
+    req.session.user.playerNumber = table.players.length;
     TABLES[tableID].addPlayer(player);
+    gameModel.addToTable(req.session.user.userID, tableID);
+
+    res.redirect(`/table/${tableID}`);
 }
 
 function roll(credits) {
@@ -127,5 +196,7 @@ module.exports = {
     sendLeft,
     sendRight,
     TABLES,
-    addPlayer
-}
+    addPlayer,
+    getTable,
+    Table
+};

@@ -7,9 +7,6 @@ const playBtn = playBtn.getByElementId("playBtn");
 const messageBtn = messageBtn.getByElementID("messateBtn");
 const messages = document.querySelector('#messages');
 const messageBox = document.querySelector('#messageBox');
-const messageBtn = messageBtn.getByElementID("messateBtn");
-const messages = document.querySelector('#messages');
-const messageBox = document.querySelector('#messageBox');
 
 playBtn.addEventListener("click", (event) =>{
     playBtn.disabled = true;
