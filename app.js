@@ -66,7 +66,7 @@ app.post("/api/login",
 app.post("/api/chat");
 
 
-app.get("/table", gameController.createNewTable);
+app.get("/table/:tableID", gameController.createNewTable);
 app.post("/table/:tableID", gameController.addPlayer);
 
 module.exports = {

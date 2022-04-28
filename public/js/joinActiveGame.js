@@ -1,11 +1,9 @@
 "use strict";
 
-function getLink(req, res) {
-    const {link} = req.body;
-    console.log(link);
-    res.redirect(`/table/${link}`);
-}
-
-module.exports = {
-    getLink,
-};
+const form = document.getElementById("linkForm");
+form.addEventListener("submit", (event) =>{
+    event.preventDefault();
+    const link = document.getElementById("link");
+    const tableID = link.value;
+    window.location.href = `${window.location.origin}/table/${tableID}`;
+});
