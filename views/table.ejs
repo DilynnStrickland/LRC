@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -5,10 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LRC!</title>
     <link href="/output.css" rel="stylesheet"></link>
+    <script src="/js/socket.js" defer></script>
 </head>
 <body class="bg-green-700">
-    <div>
-        <h1>Center: <% center %> </h1>
+    <div id="table">
+        <h1>Center: <span id="center"> <% center %> </span></h1>
+        <button id="roll" class="invisible">Roll</button>
+        <div id="players">
+            
+        </div>
     </div>
 </body>
 </html>

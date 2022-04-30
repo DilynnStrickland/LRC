@@ -7,7 +7,7 @@ const ws = require("ws");
 const gameModel = require("./Models/gameModel");
 
 const {app, sessionParser} = require("./app");
-const { TABLES, Table } = require("./Controllers/gameController");
+const { TABLES, Table, roll, play } = require("./Controllers/gameController");
 
 const server = app.listen(process.env.PORT, () => {
     console.log(`Listening on port: ${process.env.PORT}`);
@@ -49,6 +49,7 @@ function handleConnection (ws, request) {
         // send message to everyone-------------------------------------------
         if(message.cmd === "post") {
             const tableID = gameModel.getTableID(ws.userID);
+
             if(!tableID) {
                 const errorData  = {
                     "cmd": "error",
@@ -56,7 +57,9 @@ function handleConnection (ws, request) {
                 };
                 return ws.send(JSON.stringify(errorData));
             }
+
             const players = gameModel.getPlayersFromTable(tableID);
+
             for(let i = 0; i < players.length; i++) {
                 const playerSocket = clients[players[i].username]; // the current player socket is whatever socket is at element i of players.username
                 const sentText = {
@@ -69,8 +72,10 @@ function handleConnection (ws, request) {
                     playerSocket.send(JSON.stringify(sentText));
                 }
             }
+
         } else if(message.cmd === "whisper") {
             const tableID = gameModel.getTableID(ws.userID);
+
             if(!tableID) {
                 const errorData = {
                     "cmd": "error",
@@ -78,41 +83,74 @@ function handleConnection (ws, request) {
                 };
                 return ws.send(JSON.stringify(errorData));
             }
+
             const players = gameModel.getPlayersFromTable(tableID);
+
             const privateMessage = {
                 "cmd": "whisper",
-                "recipient": "@recipient",
-                "messageSent": "@message",
+                "recipient": "@recipient", // FIXME: fix this
+                "messageSent": "@message", // FIXME: fix this
             };
+
             let playerSocket;
+
             for(let i = 0; i < players.length; i++) {
                 playerSocket = clients[players[i].username];
                 if(playerSocket === privateMessage.recipient) {
                     i = players.length;
                 }
             }
-            playerSocket.send(JSON.stringify(privateMessage));
+            if(playerSocket?.readyState === ws.OPEN) {
+                playerSocket.send(JSON.stringify(privateMessage));
+            }
+            
             
         } else if (message.cmd === "join-game"){
-            // get game state
             const tableID = ws.tableID;
             let table = TABLES[tableID];
             const data = {
                 "cmd" : "update",
-                "table": table
+                "table": table,
             };
+            const players = table.players;
+            for (const player of players){
+                data.username = player.username;
+                let playerSocket = clients[player.username];
+                if(playerSocket?.readyState === ws.OPEN) {
+                    playerSocket.send(JSON.stringify(data));
+                }
+            }
 
-            ws.send(JSON.stringify(data));
         }else if (message.cmd === "update"){
-            const player = ws.userID;
+            const userID = ws.userID;
             const tableID = ws.tableID;
             let table = TABLES[tableID];
+            const players = table.players;
+            const playerIndex = players.findIndex((player) =>{
+                return player.userID === userID;
+            });
+            if (playerIndex !== table.currentPlayer){
+                return;
+            }
+            const activePlayer = table.getCurrentPlayer();
+            if (activePlayer.money !== 0){
+                play(activePlayer.money, playerIndex, players, table);
+            }
+
+            table.nextTurn();
+
             const data = {
                 "cmd" : "update",
-                "table": table
+                "table": table,
             };
-
             
+            for (const player of players){
+                data.username = player.username;
+                const playerSocket = clients[player.username];
+                if(playerSocket?.readyState === ws.OPEN) {
+                    playerSocket.send(JSON.stringify(data));
+                }
+            }   
         }
     });
 
@@ -136,12 +174,6 @@ process.once('SIGUSR2', saveTable);
 
 function saveTable () {
     const saveTables = JSON.stringify(TABLES);
-    console.log(saveTables);
-    console.log();
-    const obj = JSON.parse(saveTables);
-    console.log(obj);
-    console.log();
-    console.log(obj[Object.keys(obj)[0]].players);
     gameModel.saveGame(saveTables);
     const db = require("./Models/db.js");
     db.close();

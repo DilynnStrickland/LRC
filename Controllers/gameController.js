@@ -1,6 +1,7 @@
 "use strict";
 const crypto = require("crypto");
 const session = require("express-session");
+const { resourceLimits } = require("worker_threads");
 const gameModel = require("../Models/gameModel");
 
 const TABLES = {};
@@ -39,7 +40,6 @@ class Table {
             "players" : this.players,
             "center" : this.center,
             "currentPlayer" : this.currentPlayer,
-            "numPlayers" : this.numPlayers
         };
         
         return table;
@@ -95,6 +95,10 @@ function getTable(req, res){
         return res.redirect(`/table/${req.session.user.tableID}`);
     }
     const table = TABLES[req.session.user.tableID];
+    if (!table){
+        req.session.user.tableID = undefined;
+        res.redirect("/");
+    }
     const player = table.players[req.session.user.playerNumber];
 
 
@@ -132,17 +136,21 @@ function roll(credits) {
     else if(credits == 1) {
         dice = 1;
     }
-    let results = [dice];
-   for(let i = 0; i < dice; i++) {
-    results[i] = crypto.randomInt(6);
-   }
-   return results;  // returns the array of values that were rolled
+    let results = [];
+    for(let i = 0; i < dice; i++) {
+        results.push(crypto.randomInt(6));
+    }
+    return results;  // returns the array of values that were rolled
 }
 
 
-function play(credits, index, players) { // players is an array
+function play(credits, index, players, table) { // players is an array
+    console.log("\nindex:");
+    console.log(index);
+    console.log("\nPlayers:");
+    console.log(players);
     const results = roll(credits);
-    for(let  i = 0; i < results.length(); i++) {
+    for(let  i = 0; i < results.length; i++) {
         if(results[i] === 0) {
             sendLeft(index, players);
         }
@@ -150,7 +158,7 @@ function play(credits, index, players) { // players is an array
             sendRight(index, players);
         }
         if(results[i] === 2) {
-            players[index] -= 1;
+            players[index].money -= 1;
             table.center += 1;
         }
 
@@ -160,7 +168,7 @@ function play(credits, index, players) { // players is an array
 function getLeft(index, players){  // players is an array
     let left;
     if (index === 0){
-        left = players[players.size - 1];
+        left = players[players.length - 1];
     }else{
         left = players[index - 1];
     }
@@ -168,25 +176,24 @@ function getLeft(index, players){  // players is an array
 }
 
 function getRight(index, players){  // players is an array
-    let right;
-    if(index === 0){
-        right = players[0];
-    }else{
-        right = players[index + 1];
-    }
-    return right;
+    return players[(index + 1) % players.length];
 }
 
 function sendLeft(index, players) {  // players is an array
     const leftPlayer = getLeft(index, players);
-    players[index].credits -= 1;
-    leftPlayer.credits += 1;
+    console.log("sendLEFT");
+    console.log("\nindex:");
+    console.log(index);
+    console.log("\nPlayers:");
+    console.log(players);
+    players[index].money -= 1;
+    leftPlayer.money += 1;
 }
 
 function sendRight(index, players) {  // players is an array
     const rightPlayer = getRight(index, players);
-    players[index].credits -= 1;
-    rightPlayer.credits += 1;
+    players[index].money -= 1;
+    rightPlayer.money += 1;
 }
 
 module.exports = {
