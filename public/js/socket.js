@@ -3,8 +3,13 @@
 const socket = new WebSocket(`ws://${window.location.host}`);  // host name goes in the parenthesis
 
 const rollBtn = document.getElementById("roll");
-// const messageForm = document.getElementById("chatForm");
+const messageForm = document.getElementById("chatForm");
 
+socket.addEventListener("open", (event) => {
+    socket.send(JSON.stringify({
+        "cmd": "join-game"
+    }));
+});
 
 rollBtn.addEventListener("click", (event) =>{
     rollBtn.disabled = true;
@@ -13,13 +18,6 @@ rollBtn.addEventListener("click", (event) =>{
     }));
 });
 
-socket.addEventListener("open", (event) => {
-    socket.send(JSON.stringify({
-        "cmd": "join-game"
-    }));
-});
-
-/*
 messageForm.addEventListener("submit", (event) =>{
     event.preventDefault();
     const messageInput = document.getElementById("messageInput");
@@ -32,7 +30,6 @@ messageForm.addEventListener("submit", (event) =>{
     socket.send(JSON.stringify(data));
 
 });
-*/
 
 socket.addEventListener("message", (event) =>{
     const message = parseJSON(event.data);

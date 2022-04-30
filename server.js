@@ -48,7 +48,8 @@ function handleConnection (ws, request) {
         console.log(message);
         // send message to everyone-------------------------------------------
         if(message.cmd === "post") {
-            const tableID = gameModel.getTableID(ws.userID);
+            const tableID = ws.tableID;
+            let table = TABLES[tableID];
 
             if(!tableID) {
                 const errorData  = {
@@ -58,9 +59,9 @@ function handleConnection (ws, request) {
                 return ws.send(JSON.stringify(errorData));
             }
 
-            const players = gameModel.getPlayersFromTable(tableID);
+            const players = table.players;
 
-            for(let i = 0; i < players.length; i++) {
+            for(let i = 0; i < players.length - 1; i++) {
                 const playerSocket = clients[players[i].username]; // the current player socket is whatever socket is at element i of players.username
                 const sentText = {
                     "cmd": "post",
@@ -74,7 +75,8 @@ function handleConnection (ws, request) {
             }
 
         } else if(message.cmd === "whisper") {
-            const tableID = gameModel.getTableID(ws.userID);
+            const tableID = ws.tableID;
+            let table = TABLES[tableID];
 
             if(!tableID) {
                 const errorData = {
@@ -84,7 +86,7 @@ function handleConnection (ws, request) {
                 return ws.send(JSON.stringify(errorData));
             }
 
-            const players = gameModel.getPlayersFromTable(tableID);
+            const players = table.players;
 
             const privateMessage = {
                 "cmd": "whisper",
@@ -94,10 +96,10 @@ function handleConnection (ws, request) {
 
             let playerSocket;
 
-            for(let i = 0; i < players.length; i++) {
+            for(let i = 0; i < players.length - 1; i++) {
                 playerSocket = clients[players[i].username];
                 if(playerSocket === privateMessage.recipient) {
-                    i = players.length;
+                    i = players.length - 1;
                 }
             }
             if(playerSocket?.readyState === ws.OPEN) {
