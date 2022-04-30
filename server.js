@@ -61,7 +61,7 @@ function handleConnection (ws, request) {
 
             const players = table.players;
 
-            for(let i = 0; i < players.length - 1; i++) {
+            for(let i = 0; i < players.length; i++) {
                 const playerSocket = clients[players[i].username]; // the current player socket is whatever socket is at element i of players.username
                 const sentText = {
                     "cmd": "post",

@@ -14,7 +14,7 @@ const sessionConfig = {
     name: "session",
     cookie: {
         httpOnly: true,
-        maxAage: 1000 * 60 * 600, // big number for testing cookies
+        maxAage: 1000 * 60 * 8, // big number for testing cookies
     }
 };
 
