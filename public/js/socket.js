@@ -28,7 +28,7 @@ messageForm.addEventListener("submit", (event) =>{
         "messageSent": message
     };
     socket.send(JSON.stringify(data));
-
+    messageInput.value = "";
 });
 
 socket.addEventListener("message", (event) =>{
@@ -38,7 +38,7 @@ socket.addEventListener("message", (event) =>{
     if(message.cmd === "error"){
         
     }else if(message.cmd === "post"){
-        addPost(message.messageSent);
+        addPost(message.username, message.messageSent);
     }else if(message.cmd === "whisper"){
 
     }else if(message.cmd === "update"){
@@ -55,9 +55,9 @@ function parseJSON(data) {
     }
 }
 
-function addPost(data) {
+function addPost(username, data) {
     const newMessage = document.createElement("div");
-    newMessage.textContent = data;
+    newMessage.textContent = username + ": " + data;
 
     const chatBox = document.getElementById("chatbox");
     chatBox.append(newMessage);
@@ -83,6 +83,8 @@ function updateTable(table, username){
         rollBtn.classList.add("invisible");
         rollBtn.disabled = true;
     }
+    const tableID = document.getElementById("tableID");
+    tableID.textContent = table.tableID;
 }
 
 function createPlayer(player){
@@ -91,7 +93,7 @@ function createPlayer(player){
     const money = document.createElement("p");
     
     name.textContent = player.username;
-    money.textContent = player.money;
+    money.textContent = "Money: $" + player.money;
     
     playerDiv.append(name, money);
 

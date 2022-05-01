@@ -99,10 +99,11 @@ function getTable(req, res){
         req.session.user.tableID = undefined;
         res.redirect("/");
     }
-    const player = table.players[req.session.user.playerNumber];
 
-
-    res.render("table", {"player": player, "center": "table.center"});
+    res.render("table", {
+        "center": "table.center",
+        "tableID": table.tableID,
+    });
 }
 
 function addPlayer(req, res){
