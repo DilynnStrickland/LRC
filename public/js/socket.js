@@ -42,7 +42,7 @@ socket.addEventListener("message", (event) =>{
     }else if(message.cmd === "whisper"){
 
     }else if(message.cmd === "update"){
-        updateTable(message.table, message.username);
+        updateTable(message.table, message.username, message.rollResult);
     }else if (message.cmd === "gameOver"){
         gameOver(message.winner);
     }
@@ -66,10 +66,13 @@ function addPost(username, data) {
     chatBox.append(newMessage);
 }
 
-function updateTable(table, username){
+function updateTable(table, username, rollResult){
     const center = table.center;
     const updateCenter = document.getElementById("center");
     updateCenter.textContent = center;
+
+    const rollResultDiv = document.getElementById("rollResult");
+    rollResultDiv.textContent = "Roll Result: " + rollResult;
 
     const playersContainer = document.getElementById("players");
     playersContainer.innerHTML = "";

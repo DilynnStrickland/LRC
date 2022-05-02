@@ -135,10 +135,10 @@ function roll(credits) {
     if(credits >= 3) {
         dice = 3;
     }
-    else if(credits == 2) {
+    else if(credits === 2) {
         dice = 2;
     }
-    else if(credits == 1) {
+    else if(credits === 1) {
         dice = 1;
     }
     let results = [];
@@ -151,6 +151,7 @@ function roll(credits) {
 
 function play(credits, index, players, table) { // players is an array
     const results = roll(credits);
+    console.log(results);
     let playersLeftWithMoney = 0;
     for (const player of players){
         if (player.money > 0){
@@ -158,24 +159,31 @@ function play(credits, index, players, table) { // players is an array
         }
     }
     let nothing = 0;
-    for(let  i = 0; i < results.length; i++) {
-        if(results[i] === 0) {
+    let rollResult = [];  // for the actual value of the rollResult
+    for(const result of results){
+        if(result === 0){
             sendLeft(index, players);
+            rollResult += "L";
         }
-        if(results[i] === 1) {
+        if(result === 1) {
             sendRight(index, players);
+            rollResult += "R";
         }
-        if(results[i] === 2) {
+        if(result === 2) {
             players[index].money -= 1;
             table.center += 1;
-        }else{
+            rollResult += "C";
+        }
+        if (result > 2){
             nothing++;
+            rollResult += "*";
         }
     }
+    console.log(rollResult);
     if (playersLeftWithMoney === 1 && results.length === nothing){
         return 1;
     }
-    return 0;
+    return rollResult;
 }
 
 function getLeft(index, players){  // players is an array

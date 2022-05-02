@@ -148,6 +148,7 @@ function handleConnection (ws, request) {
                 data.winner = activePlayer;
             }else{
                 table.nextTurn();
+                data.rollResult = check;
             }
 
             data.table = table;
