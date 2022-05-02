@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const session = require("express-session");
 const { resourceLimits } = require("worker_threads");
 const gameModel = require("../Models/gameModel");
+const { getUserByUserID } = require("../Models/userModel");
 
 const TABLES = {};
 
@@ -33,6 +34,9 @@ class Table {
     nextTurn(){
         this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
         return this.players[this.currentPlayer];
+    }
+    gameOver(){
+        return this.currentPlayer;
     }
     toJSON(){
         const table = {
@@ -146,11 +150,14 @@ function roll(credits) {
 
 
 function play(credits, index, players, table) { // players is an array
-    console.log("\nindex:");
-    console.log(index);
-    console.log("\nPlayers:");
-    console.log(players);
     const results = roll(credits);
+    let playersLeftWithMoney = 0;
+    for (const player of players){
+        if (player.money > 0){
+            playersLeftWithMoney++;
+        }
+    }
+    let nothing = 0;
     for(let  i = 0; i < results.length; i++) {
         if(results[i] === 0) {
             sendLeft(index, players);
@@ -161,9 +168,14 @@ function play(credits, index, players, table) { // players is an array
         if(results[i] === 2) {
             players[index].money -= 1;
             table.center += 1;
+        }else{
+            nothing++;
         }
-
     }
+    if (playersLeftWithMoney === 1 && results.length === nothing){
+        return 1;
+    }
+    return 0;
 }
 
 function getLeft(index, players){  // players is an array
@@ -182,11 +194,6 @@ function getRight(index, players){  // players is an array
 
 function sendLeft(index, players) {  // players is an array
     const leftPlayer = getLeft(index, players);
-    console.log("sendLEFT");
-    console.log("\nindex:");
-    console.log(index);
-    console.log("\nPlayers:");
-    console.log(players);
     players[index].money -= 1;
     leftPlayer.money += 1;
 }
@@ -195,6 +202,17 @@ function sendRight(index, players) {  // players is an array
     const rightPlayer = getRight(index, players);
     players[index].money -= 1;
     rightPlayer.money += 1;
+}
+
+function updateWinCount (player){
+    const user = getUserByUserID(player.userID);
+    user.winCount = user.winCount + 1;
+}
+
+function winPage(req, res){
+    const table = TABLES[req.session.user.tableID];
+    const winningPlayer = table.currentPlayer;
+    res.redirect("win", {"winningPlayer": "winningPlayer"});
 }
 
 module.exports = {

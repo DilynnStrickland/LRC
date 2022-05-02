@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS Users (
     userID TEXT PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     passwordHash TEXT UNIQUE NOT NULL,
-    winStreak INTEGER DEFAULT 0 NOT NULL CHECK(winStreak >= 0)
+    winCount INTEGER DEFAULT 0 NOT NULL CHECK(winCount >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS GameTable (

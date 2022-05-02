@@ -49,6 +49,7 @@ function setUsername (username, userID) {
     stmt.run({"username": username, "userID": userID});
 }
 
+
 module.exports = {
     addUser,
     getUserByUsername,

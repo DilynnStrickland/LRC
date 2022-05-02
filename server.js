@@ -135,16 +135,22 @@ function handleConnection (ws, request) {
                 return;
             }
             const activePlayer = table.getCurrentPlayer();
+            let check;
             if (activePlayer.money !== 0){
-                play(activePlayer.money, playerIndex, players, table);
+                check = play(activePlayer.money, playerIndex, players, table);
             }
 
-            table.nextTurn();
+            let data = {};
+            data.cmd = "update";
 
-            const data = {
-                "cmd" : "update",
-                "table": table,
-            };
+            if (check === 1){
+                data.cmd = "gameOver";
+                data.winner = activePlayer;
+            }else{
+                table.nextTurn();
+            }
+
+            data.table = table;
             
             for (const player of players){
                 data.username = player.username;

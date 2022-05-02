@@ -43,9 +43,12 @@ socket.addEventListener("message", (event) =>{
 
     }else if(message.cmd === "update"){
         updateTable(message.table, message.username);
+    }else if (message.cmd === "gameOver"){
+        gameOver(message.winner);
     }
 
 });
+
 function parseJSON(data) {
     try {
         return JSON.parse(data);
@@ -91,6 +94,14 @@ function createPlayer(player){
     const playerDiv = document.createElement("div");
     const name = document.createElement("h4");
     const money = document.createElement("p");
+    playerDiv.classList.add("bg-purple-500");
+    playerDiv.classList.add("text-white");
+    playerDiv.classList.add("text-xl");
+    playerDiv.classList.add("font-bold");
+    playerDiv.classList.add("py-2");
+    playerDiv.classList.add("rounded");
+    playerDiv.classList.add("shadow-lg");
+    playerDiv.classList.add("my-2.5");
     
     name.textContent = player.username;
     money.textContent = "Money: $" + player.money;
@@ -98,4 +109,11 @@ function createPlayer(player){
     playerDiv.append(name, money);
 
     return playerDiv;
+}
+
+function gameOver(winner){
+    rollBtn.classList.add("invisible");
+    rollBtn.disabled = true;
+    const winnerID = document.getElementById("winner");
+    winnerID.textContent = "Winner: " + winner.username;
 }
