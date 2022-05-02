@@ -101,7 +101,8 @@ function createPlayer(player){
     playerDiv.classList.add("py-2");
     playerDiv.classList.add("rounded");
     playerDiv.classList.add("shadow-lg");
-    playerDiv.classList.add("my-2.5");
+    playerDiv.classList.add("mx-2.5");
+    playerDiv.classList.add("margin");
     
     name.textContent = player.username;
     money.textContent = "Money: $" + player.money;
