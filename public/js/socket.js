@@ -77,18 +77,29 @@ function updateTable(table, username, rollResult){
     const playersContainer = document.getElementById("players");
     playersContainer.innerHTML = "";
     const players = table.players;
+    let playerCount = 0;
     for (const player of players){
         const playerDiv = createPlayer(player);
         playersContainer.append(playerDiv);
+        playerCount++;
     }
-    
-    if (table.players[table.currentPlayer].username === username){
-        rollBtn.classList.remove("invisible");
-        rollBtn.disabled = false;
-    }else{
+    const alertAreaDiv = document.getElementById("alertArea");
+    if (playerCount < 3){
         rollBtn.classList.add("invisible");
         rollBtn.disabled = true;
+        
+        alertAreaDiv.textContent = "Must have 3 or more players to play!";
+    }else{
+        alertAreaDiv.classList.add("invisible");
+        if (table.players[table.currentPlayer].username === username){
+            rollBtn.classList.remove("invisible");
+            rollBtn.disabled = false;
+        }else{
+            rollBtn.classList.add("invisible");
+            rollBtn.disabled = true;
+        }
     }
+
     const tableID = document.getElementById("tableID");
     tableID.textContent = table.tableID;
 }

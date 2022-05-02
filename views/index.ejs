@@ -23,13 +23,17 @@
     <h1 class="text-8xl text-center text-white bg-purple-500 rounded">Left Right Center</h1><br>
     <div class="text-6xl max-w-6xl mx-auto px-4 md:flex justify-center space-x-4">
         <% if (!loggedIn) { %>
-            <a href="/username" class="py-2 px-2 font-medium text-white rounded bg-purple-500 hover:bg-purple-400 transition duration-300">New Game</a>
+            <a href="/login" class="py-2 px-2 font-medium text-white rounded bg-purple-500 hover:bg-purple-400 transition duration-300">New Game</a>
         <% } else { %>
             <form action="/table" method="post">
                 <button id="createGame" class="py-2 px-2 font-medium text-white rounded bg-purple-500 hover:bg-purple-400 transition duration-300">New Game</button>
             </form>
-            <% } %>
-        <a href="/getLink" class="py-2 px-2 font-medium text-white rounded bg-purple-500 hover:bg-purple-400 transition duration-300">Join Game</a>
+        <% } %>
+        <% if (!loggedIn) { %>
+            <a href="/login" class="py-2 px-2 font-medium text-white rounded bg-purple-500 hover:bg-purple-400 transition duration-300">Join Game</a>
+        <% } else { %>
+            <a href="/getLink" class="py-2 px-2 font-medium text-white rounded bg-purple-500 hover:bg-purple-400 transition duration-300">Join Game</a>
+        <% } %>
     </div>
 </body>
 </html>

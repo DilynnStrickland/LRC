@@ -183,6 +183,7 @@ function play(credits, index, players, table) { // players is an array
     if (playersLeftWithMoney === 1 && results.length === nothing){
         return 1;
     }
+
     return rollResult;
 }
 
