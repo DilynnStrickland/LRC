@@ -1,6 +1,6 @@
 "use strict";
 
-const socket = new WebSocket(`ws://${window.location.host}`);  // host name goes in the parenthesis
+const socket = new WebSocket(`wss://${window.location.host}`);  // host name goes in the parenthesis
 
 const rollBtn = document.getElementById("roll");
 const messageForm = document.getElementById("chatForm");

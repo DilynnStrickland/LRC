@@ -96,7 +96,14 @@ function getTable(req, res){
     if (!req.session?.user?.tableID){
         return res.redirect("/");
     } else if(req.session.user.tableID !== req.params.tableID){
-        return res.redirect(`/table/${req.session.user.tableID}`);
+        const wrongTable = TABLES[req.session.user.tableID];
+        const wrongTablePlayers = wrongTable.players;
+        for (const player of wrongTablePlayers){
+            if (player.userID === req.session.user.userID){
+                wrongTablePlayers.splice(player, 1);
+            }
+        }
+        req.session.user.tableID = req.params.tableID;
     }
     const table = TABLES[req.session.user.tableID];
     if (!table){
@@ -182,6 +189,12 @@ function play(credits, index, players, table) { // players is an array
     console.log(rollResult);
     if (playersLeftWithMoney === 1 && results.length === nothing){
         return 1;
+    }
+    if (playersLeftWithMoney === 0 && table.center === (table.players.length * 3)){
+        table.center = 0;
+        for (const player of players){
+            player.money = 3;
+        }
     }
 
     return rollResult;
