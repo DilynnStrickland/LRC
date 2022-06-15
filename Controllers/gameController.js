@@ -195,6 +195,7 @@ function play(credits, index, players, table) { // players is an array
         for (const player of players){
             player.money = 3;
         }
+        return 2;
     }
 
     return rollResult;

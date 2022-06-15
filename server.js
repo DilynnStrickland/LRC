@@ -146,7 +146,9 @@ function handleConnection (ws, request) {
             if (check === 1){
                 data.cmd = "gameOver";
                 data.winner = activePlayer;
-            }else{
+            }else if (check === 2){
+                data.message = "It's a push! Play again!";
+            } else{
                 table.nextTurn();
                 data.rollResult = check;
             }

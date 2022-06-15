@@ -42,7 +42,11 @@ socket.addEventListener("message", (event) =>{
     }else if(message.cmd === "whisper"){
 
     }else if(message.cmd === "update"){
-        updateTable(message.table, message.username, message.rollResult);
+        updateTable(message.table, 
+                    message.username, 
+                    message.rollResult, 
+                    message.message);
+
     }else if (message.cmd === "gameOver"){
         gameOver(message.winner);
     }
@@ -66,7 +70,7 @@ function addPost(username, data) {
     chatBox.append(newMessage);
 }
 
-function updateTable(table, username, rollResult){
+function updateTable(table, username, rollResult, alert){
     const center = table.center;
     const updateCenter = document.getElementById("center");
     updateCenter.textContent = center;
@@ -98,6 +102,10 @@ function updateTable(table, username, rollResult){
             rollBtn.classList.add("invisible");
             rollBtn.disabled = true;
         }
+    }
+
+    if (alert){
+        alertAreaDiv.textContent = alert;
     }
 
     const tableID = document.getElementById("tableID");
