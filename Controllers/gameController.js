@@ -238,6 +238,10 @@ function winPage(req, res){
     res.redirect("win", {"winningPlayer": "winningPlayer"});
 }
 
+function populateCPU(numCPUs){
+    
+}
+
 module.exports = {
     createNewTable,
     roll,
