@@ -238,8 +238,8 @@ function winPage(req, res){
     res.redirect("win", {"winningPlayer": "winningPlayer"});
 }
 
-function populateCPU(numCPUs){
-    
+function populateCPU(req, res){
+    const numCPUs = req.params.cpu
 }
 
 module.exports = {
